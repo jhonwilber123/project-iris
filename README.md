@@ -1,12 +1,23 @@
 # Project IRIS: Investment Risk Index for Sub-sovereign Assets
 
+## 🚀 Live Demo
+
+**Explore the interactive IRIS Risk Index dashboard, now deployed on Streamlit Cloud:**
+
+[**➡️ Access the Live Application Here**](https://your-app-url.streamlit.app/) 
+*(Note: Replace `your-app-url.streamlit.app` with the actual URL of your deployed application)*
+
+---
+
 ## 1. Executive Summary
 
-Project IRIS is a proprietary risk scoring model designed to assess the viability of public infrastructure investments at the municipal level in Peru. By innovatively fusing public works execution data with public health statistics (used as a proxy for social and institutional stability), IRIS provides a deeper, more predictive view of risk than traditional financial models.
+Project IRIS is a proprietary risk scoring model designed to assess the viability of public infrastructure investments at the municipal level in Peru. By innovatively fusing public works execution data (**INFOBRAS**) with public health statistics (**SINADEF**) as a proxy for social and institutional stability, IRIS provides a deeper, more predictive view of risk than traditional financial models.
 
-**Tech Stack:** Python, Pandas, Scikit-learn, Plotly, Streamlit, Google Cloud Platform (for deployment).
+This repository contains the end-to-end data pipeline, feature engineering, and the source code for a fully functional, interactive web application.
 
-**Keywords:** `FinTech`, `Quantitative Analysis`, `Risk Modeling`, `Data Science`, `Machine Learning`, `Alternative Data`.
+**Tech Stack:** Python, Pandas, Scikit-learn, Plotly, PyDeck, Shapely, Streamlit.
+
+**Keywords:** `FinTech`, `Quantitative Analysis`, `Risk Modeling`, `Data Science`, `Machine Learning`, `Alternative Data`, `Data Visualization`.
 
 ---
 
@@ -18,41 +29,66 @@ The objective is to develop and validate a data product that can provide investo
 
 ## 3. Project Roadmap & Status
 
-This project is in active development. The planned sprints are as follows:
+This project is executed in four sprints. The current status is as follows:
 
 -   **[Sprint 1: Data Wrangling]**: Consolidating and cleaning public works and public health datasets. **(Completed ✅)**
--   **[Sprint 2: Feature Engineering]**: Developing the G-Factor (Governmental Inefficiency) and S-Factor (Social Vulnerability). **(In Progress ⏳)**
--   **[Sprint 3: Index Construction & Dashboard MVP]**: Building the final IRIS score and deploying an interactive dashboard with Streamlit.
--   **[Sprint 4: Backtesting & Validation]**: Rigorously testing the predictive power of the index against historical project outcomes.
+-   **[Sprint 2: Feature Engineering]**: Developing the G-Factor (Governmental) and S-Factor (Social). **(Completed ✅)**
+-   **[Sprint 3: Visualization & Dashboard MVP]**: Building the final IRIS score and deploying an interactive dashboard. **(Completed ✅)**
+-   **[Sprint 4: Backtesting & Validation]**: Rigorously testing the predictive power of the index. **(In Progress ⏳)**
 
 ---
 
-## 4. Data Pipeline & Sources
+## 4. The IRIS Dashboard
 
-The core of this project is the fusion of two disparate public datasets to generate unique risk signals. The entire process of data ingestion, cleaning, auditing, curation, and fusion is documented in the following notebooks:
+The project culminates in a multilingual, interactive dashboard built with Streamlit and deployed on the cloud.
 
--   `notebooks/01_iris_infobras_cleaning.ipynb`
--   `notebooks/02_SINADEF_Processing.ipynb`
--   `notebooks/03_Data_Fusion.ipynb`
+**Key Features:**
+*   **Interactive Risk Map:** An intuitive heatmap of Peru, built with PyDeck, visualizing the IRIS score for over 1,700 districts.
+*   **Dynamic Filtering:** Users can filter the data in real-time by department and risk score range using sidebar controls.
+*   **In-Depth District Analysis:** A "District Profile" section allows users to select any district and view a detailed breakdown of its risk components through metrics and radar charts.
+*   **Comparative Analysis:** Users can compare a selected district's risk profile against the national average or any other district.
+
+---
+
+## 5. Data Pipeline & Sources
+
+The core of this project is the fusion of two disparate public datasets. The entire process of data ingestion, cleaning, auditing, curation, and fusion is documented in the notebooks within the `/notebooks` directory.
 
 ### Data Sources
 
 1.  **INFOBRAS - Public Works (`infobras_certified_v1.csv`):**
-    *   **Source:** National Open Data Portal of Peru, managed by the Comptroller General's Office.
-    *   **Description:** Contains detailed records of over 180,000 public infrastructure projects nationwide.
-    *   **Process:** A rigorous 8-step pipeline was implemented, which included column standardization, text cleaning, type conversion, and an auditing/curation phase that removed over 48,000 records with illogical or inconsistent data (e.g., inverted dates, zero-day timelines). The result is a certified dataset at the individual project level.
+    *   **Source:** National Open Data Portal of Peru (Comptroller General's Office).
+    *   **Process:** A rigorous 8-step pipeline was implemented to clean, audit, and curate over 180,000 raw records, removing more than 48,000 illogical or inconsistent entries.
 
 2.  **SINADEF - National Death Registry (`sinadef_certified_v1.csv`):**
-    *   **Source:** National Open Data Portal of Peru, managed by the Ministry of Health (MINSA).
-    *   **Description:** Contains records of over 1 million deaths nationwide, including demographic and location data.
-    *   **Process:** A pipeline was developed to clean, standardize, and, most critically, **aggregate** the data to the district level (`ubigeo`). Plausibility filters (e.g., removing ages > 110) were applied to ensure the quality of the resulting health indicators.
+    *   **Source:** National Open Data Portal of Peru (Ministry of Health).
+    *   **Process:** A pipeline was developed to clean, standardize, and aggregate over 1 million individual records to the district level (`ubigeo`), applying plausibility filters to ensure data quality.
 
-### Fusion
+### Fusion & Feature Engineering
 
-The final output of Sprint 1 is `iris_master_dataset_v1.csv`, a master dataset that joins the INFOBRAS data (aggregated to the district level to create the **G-Factors**) with the SINADEF data (which form the **S-Factors**). This fusion was performed using a `left merge` on the `ubigeo` key, prioritizing districts with public works activity.
+The certified datasets were merged to create a master dataset. From this, **G-Factors** (e.g., cost overrun ratio, paralysis rate) and **S-Factors** (e.g., average age of death) were engineered. These factors were then normalized and weighted to compute the final **IRIS Score** for each district, resulting in the `iris_scores_for_dashboard.csv` file that powers the application.
 
 ---
 
-## 5. How to Use
+## 6. How to Use
 
-*(This section will be updated with instructions on how to run the application and notebooks once Sprint 3 is complete).*
+### Running the Application Locally
+
+1.  Clone the repository:
+    ```bash
+    git clone https://github.com/jhonwilber123/project-iris.git
+    cd project-iris
+    ```
+2.  Create and activate the virtual environment:
+    ```bash
+    python -m venv iris_env
+    source iris_env/bin/activate  # On Windows: .\iris_env\Scripts\activate
+    ```
+3.  Install the required dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
+4.  Run the Streamlit application:
+    ```bash
+    streamlit run app/app.py
+    ```
