@@ -5,7 +5,7 @@
 **Explore the interactive IRIS Risk Index dashboard, now deployed on Streamlit Cloud:**
 
 [**➡️ Access the Live Application Here**](https://project-iris-i5kzacnumt2dtusmiiqbkx.streamlit.app/) 
-*(Note: Replace `your-app-url.streamlit.app` with the actual URL of your deployed application)*
+*(Note: Replace `https://project-iris-i5kzacnumt2dtusmiiqbkx.streamlit.app/` with the actual URL of your deployed application)*
 
 ---
 
