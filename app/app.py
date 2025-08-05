@@ -1,4 +1,4 @@
-# app/app.py
+# app/app.py - VERSIÓN FINAL CON RENDERIZADOR MODERNO
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -10,6 +10,7 @@ st.set_page_config(page_title="IRIS Risk Index", layout="wide", page_icon="👁�
 # --- FUNCIONES DE CARGA (YA VALIDADAS) ---
 @st.cache_data
 def load_data():
+    """Carga y prepara los datos de scores con máxima robustez."""
     df = pd.read_csv('data/iris_scores_for_dashboard.csv')
     if 'ubigeo_code' in df.columns:
         df.dropna(subset=['ubigeo_code'], inplace=True)
@@ -18,6 +19,7 @@ def load_data():
 
 @st.cache_data
 def load_geojson():
+    """Carga el archivo GeoJSON de distritos de Perú."""
     with open('data/peru_distritos.geojson') as f:
         return json.load(f)
 
@@ -33,7 +35,7 @@ try:
 
     if 'ubigeo_code' in df_scores.columns and not df_scores.empty:
         
-        # --- CÓDIGO DEL MAPA (USANDO LA FUNCIÓN MODERNA 'choropleth') ---
+        # --- CÓDIGO DEL MAPA (USANDO LA FUNCIÓN MODERNA Y RECOMENDADA 'choropleth') ---
         fig = px.choropleth(
             df_scores,
             geojson=geojson_distritos,
@@ -41,15 +43,15 @@ try:
             featureidkey="properties.IDDIST",
             color='iris_score',
             color_continuous_scale="Reds",
-            scope="south america",
+            scope="south america", # Se define el alcance del mapa
             hover_name='ubigeo',
             hover_data={'iris_score': ':.3f'}
         )
         
-        # Centramos el mapa en Perú
+        # Este es el truco para centrar el mapa en Perú con la nueva función
         fig.update_geos(
-            fitbounds="locations", 
-            visible=False
+            fitbounds="locations", # Hace zoom automático a las locaciones
+            visible=False # Oculta el mapa base del mundo para un look más limpio
         )
         
         fig.update_layout(
@@ -60,10 +62,6 @@ try:
         
     else:
         st.warning("No se pudieron generar los datos para el mapa.")
-
-    # Mantenemos el panel de depuración por si acaso
-    with st.expander("Ver datos de depuración"):
-        st.dataframe(df_scores[['ubigeo', 'ubigeo_code', 'iris_score']].head())
 
     st.header("Explorador de Datos Completo")
     st.dataframe(df_scores)

@@ -1,0 +1,5 @@
+pandas
+streamlit
+plotly
+openpyxl # Para leer el excel de INFOBRAS en el primer notebook (buena práctica tenerlo)
+scikit-learn # Lo usamos para el scaler
