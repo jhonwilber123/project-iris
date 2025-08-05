@@ -1,4 +1,4 @@
-# app/app.py - VERSIÓN FINAL CON RENDERIZADOR MODERNO
+# app/app.py - VERSIÓN DE DESPLIEGUE FINAL
 import streamlit as st
 import pandas as pd
 import plotly.express as px
@@ -10,7 +10,6 @@ st.set_page_config(page_title="IRIS Risk Index", layout="wide", page_icon="👁�
 # --- FUNCIONES DE CARGA (YA VALIDADAS) ---
 @st.cache_data
 def load_data():
-    """Carga y prepara los datos de scores con máxima robustez."""
     df = pd.read_csv('data/iris_scores_for_dashboard.csv')
     if 'ubigeo_code' in df.columns:
         df.dropna(subset=['ubigeo_code'], inplace=True)
@@ -19,7 +18,6 @@ def load_data():
 
 @st.cache_data
 def load_geojson():
-    """Carga el archivo GeoJSON de distritos de Perú."""
     with open('data/peru_distritos.geojson') as f:
         return json.load(f)
 
@@ -43,15 +41,15 @@ try:
             featureidkey="properties.IDDIST",
             color='iris_score',
             color_continuous_scale="Reds",
-            scope="south america", # Se define el alcance del mapa
+            scope="south america",
             hover_name='ubigeo',
             hover_data={'iris_score': ':.3f'}
         )
         
-        # Este es el truco para centrar el mapa en Perú con la nueva función
+        # Centramos el mapa en Perú
         fig.update_geos(
-            fitbounds="locations", # Hace zoom automático a las locaciones
-            visible=False # Oculta el mapa base del mundo para un look más limpio
+            fitbounds="locations", 
+            visible=False
         )
         
         fig.update_layout(
