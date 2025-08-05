@@ -139,3 +139,14 @@ webencodings==0.5.1
 websocket-client==1.8.0
 Werkzeug==3.0.4
 widgetsnbextension==4.0.14
+pandas
+openpyxl
+streamlit
+plotly
+scikit-learn
+missingno
+jupyterlab
+ipywidgets
+jupyter-dash
+pydeck
+shapely
